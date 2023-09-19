@@ -5,12 +5,15 @@ import (
 	"github.com/rivo/tview"
 )
 
+// TODO: In gui Ctrl+Q is not working as exit, find a way to exit
+
 var itemsList *tview.List
 var fieldsList *tview.List
 var buttonAdd *tview.Button
 
 func GetMainScreen() *tview.Flex {
-	flex := tview.NewFlex()
+	wrapperFlex := tview.NewFlex().SetDirection(tview.FlexRow)
+	mainFlex := tview.NewFlex()
 
 	itemsList = tview.NewList().ShowSecondaryText(false)
 
@@ -28,16 +31,18 @@ func GetMainScreen() *tview.Flex {
 	fieldsList.AddItem("🗄 PIN", "", 0, FieldSelected)
 	fieldsList.SetBorder(true).SetTitle(" Fields (Ctrl+S) ").SetBorderPadding(1, 1, 1, 1)
 
-	buttonAdd = tview.NewButton("Add Item")
+	buttonAdd = tview.NewButton("Add Item").SetSelectedFunc(addButtonPressed)
 
-	flex.AddItem(itemsList, 0, 1, true).
-		AddItem(fieldsList, 0, 2, false).
-		AddItem(buttonAdd, 0, 1, false)
+	mainFlex.AddItem(itemsList, 0, 1, true).
+		AddItem(fieldsList, 0, 2, false)
+
+	wrapperFlex.AddItem(mainFlex, 0, 1, true).
+		AddItem(buttonAdd, 1, 0, false)
 
 	itemsList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyRight:
-			app.SetRoot(flex, true).SetFocus(fieldsList)
+			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
 			return nil
 		case tcell.KeyLeft:
 			return nil
@@ -51,7 +56,7 @@ func GetMainScreen() *tview.Flex {
 	fieldsList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyLeft:
-			app.SetRoot(flex, true).SetFocus(itemsList)
+			app.SetRoot(wrapperFlex, true).SetFocus(itemsList)
 			return nil
 		case tcell.KeyRight:
 			return nil
@@ -59,23 +64,36 @@ func GetMainScreen() *tview.Flex {
 		return event
 	})
 
-	flex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	wrapperFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyTab:
+			if buttonAdd.HasFocus() {
+				app.SetRoot(wrapperFlex, true).SetFocus(itemsList)
+				return nil
+			}
+		case tcell.KeyCtrlF:
+			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
+			return nil
+		}
+		return event
+	})
+
+	mainFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 
 		switch event.Key() {
 		case tcell.KeyTab:
 			if itemsList.HasFocus() {
-				app.SetRoot(flex, true).SetFocus(fieldsList)
+				app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
 			} else if fieldsList.HasFocus() {
-				app.SetRoot(flex, true).SetFocus(buttonAdd)
-			} else if buttonAdd.HasFocus() {
-				app.SetRoot(flex, true).SetFocus(itemsList)
+				app.SetRoot(wrapperFlex, true).SetFocus(buttonAdd)
 			}
 			return nil
-		
+
 		//case tcell.KeyCtrlI:
 		//	app.SetRoot(flex, true).SetFocus(itemsList)
 		case tcell.KeyCtrlF:
-			app.SetRoot(flex, true).SetFocus(fieldsList)
+			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
+			return nil
 		case tcell.KeyCtrlQ:
 			// Exit the application
 			app.Stop()
@@ -83,7 +101,11 @@ func GetMainScreen() *tview.Flex {
 		}
 		return event
 	})
-	return flex
+	return wrapperFlex
+}
+
+func addButtonPressed() {
+	app.SetRoot(GetAddItemScreen(), true)
 }
 
 func ItemSelected() {

@@ -45,6 +45,7 @@ func main() {
 	} else {
 		app.SetRoot(GetLoginScreen(), true)
 	}
+	app.EnableMouse(true)
 	if err := app.Run(); err != nil {
 		log.Fatalln(err)
 	}
@@ -52,6 +53,7 @@ func main() {
 }
 
 func StopApp() {
+
 	_ = oxiInstance.Close()
 	app.Stop()
 }

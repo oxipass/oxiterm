@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/oxipass/oxilib/models"
 	"github.com/rivo/tview"
 )
 
@@ -14,6 +15,14 @@ func GetAddItemScreen() (form *tview.Form) {
 		AddInputField("Item name", "", 16, nil, ItemNameChangedChanged).
 		AddInputField("Item icon", "", 16, nil, ItemIconChangedChanged).
 		AddButton("Add", func() {
+			var newItem models.UpdateItemForm
+			newItem.Name = itemName
+			newItem.Icon = "brands/golang"
+			_, err := oxiInstance.AddNewItem(newItem)
+			if err != nil {
+				app.SetRoot(GetErrorView("Item adding error: "+err.Error(), addItemForm), true)
+				return
+			}
 			app.SetRoot(GetMainScreen(), true)
 		}).
 		AddButton("Back", func() {

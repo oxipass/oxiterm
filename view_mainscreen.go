@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gdamore/tcell/v2"
+	"github.com/oxipass/oxilib"
 	"github.com/rivo/tview"
 )
 
@@ -9,35 +10,47 @@ import (
 
 var itemsList *tview.List
 var fieldsList *tview.List
-var buttonAdd *tview.Button
+var buttonAddItem *tview.Button
+var buttonAddField *tview.Button
 
 func GetMainScreen() *tview.Flex {
 	wrapperFlex := tview.NewFlex().SetDirection(tview.FlexRow)
 	mainFlex := tview.NewFlex()
+	buttonsFlex := tview.NewFlex()
 
 	itemsList = tview.NewList().ShowSecondaryText(false)
 
-	itemsList.AddItem("📁 Games", "", 0, ItemSelected)
-	itemsList.AddItem("🗄 Paypal", "", 0, ItemSelected)
-	itemsList.AddItem("🗄 Gmail", "", 0, ItemSelected)
-	itemsList.AddItem("🗄 Bitcoin", "", 0, ItemSelected)
-	itemsList.AddItem("🗄 Bitcoin", "", 0, ItemSelected)
+	oxilib.GetInstance()
+
+	items, err := oxiInstance.ReadAllItems(false, false)
+	if err != nil {
+		app.SetRoot(GetErrorView("Items reading error: "+err.Error(), addItemForm), true)
+	}
+
+	for _, objItem := range items {
+		itemsList.AddItem(objItem.Name, "", 0, ItemSelected)
+	}
 
 	itemsList.SetBorder(true).SetTitle(" Items (Ctrl+A) ").SetBorderPadding(1, 1, 1, 1)
 
-	fieldsList = tview.NewList().ShowSecondaryText(false)
-	fieldsList.AddItem("🗄 User", "", 0, FieldSelected)
-	fieldsList.AddItem("🗄 Password", "", 0, FieldSelected)
-	fieldsList.AddItem("🗄 PIN", "", 0, FieldSelected)
+	fieldsList = tview.NewList().ShowSecondaryText(true)
+	fieldsList.AddItem("🗄 User", "alexanrb", 0, FieldSelected)
+	fieldsList.AddItem("🗄 Password", "Bsyu87z1", 0, FieldSelected)
+	fieldsList.AddItem("🗄 PIN", "1799", 0, FieldSelected)
 	fieldsList.SetBorder(true).SetTitle(" Fields (Ctrl+S) ").SetBorderPadding(1, 1, 1, 1)
 
-	buttonAdd = tview.NewButton("Add Item").SetSelectedFunc(addButtonPressed)
+	buttonAddItem = tview.NewButton("Add Item (1)").SetSelectedFunc(addButtonPressed)
+	buttonAddField = tview.NewButton("Add Field (2)").SetSelectedFunc(addButtonPressed)
 
 	mainFlex.AddItem(itemsList, 0, 1, true).
 		AddItem(fieldsList, 0, 2, false)
 
+	buttonsFlex.AddItem(buttonAddItem, 15, 0, false).
+		AddItem(tview.NewBox(), 1, 0, false).
+		AddItem(buttonAddField, 15, 0, false)
+
 	wrapperFlex.AddItem(mainFlex, 0, 1, true).
-		AddItem(buttonAdd, 1, 0, false)
+		AddItem(buttonsFlex, 1, 0, false)
 
 	itemsList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
@@ -49,6 +62,15 @@ func GetMainScreen() *tview.Flex {
 		case tcell.KeyUp:
 		case tcell.KeyDown:
 			ItemSelected()
+
+		}
+		switch event.Rune() {
+		case '1':
+			app.SetRoot(wrapperFlex, true).SetFocus(buttonAddItem)
+			return nil
+		case '2':
+			app.SetRoot(wrapperFlex, true).SetFocus(buttonAddField)
+			return nil
 		}
 		return event
 	})
@@ -67,8 +89,18 @@ func GetMainScreen() *tview.Flex {
 	wrapperFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyTab:
-			if buttonAdd.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(itemsList)
+			if buttonAddItem.HasFocus() {
+				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddField)
+				return nil
+			}
+		case tcell.KeyRight:
+			if buttonAddItem.HasFocus() {
+				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddField)
+				return nil
+			}
+		case tcell.KeyLeft:
+			if buttonAddField.HasFocus() {
+				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddItem)
 				return nil
 			}
 		case tcell.KeyCtrlF:
@@ -85,7 +117,7 @@ func GetMainScreen() *tview.Flex {
 			if itemsList.HasFocus() {
 				app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
 			} else if fieldsList.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonAdd)
+				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddItem)
 			}
 			return nil
 
@@ -112,8 +144,9 @@ func ItemSelected() {
 	switch itemsList.GetCurrentItem() {
 	case 0:
 		fieldsList.Clear()
-		fieldsList.AddItem("🗄 Games User", "", 0, FieldSelected)
-		fieldsList.AddItem("🗄 Games Password", "", 0, FieldSelected)
+		fieldsList.AddItem("🗄   User", "   "+"alexanrb", 0, FieldSelected)
+		fieldsList.AddItem("🗄   Password", "   "+"Bsyu87z1", 0, FieldSelected)
+		fieldsList.AddItem("🗄   PIN", "   "+"1799", 0, FieldSelected)
 	case 1:
 		fieldsList.Clear()
 		fieldsList.AddItem("🗄 Paypal User", "", 0, FieldSelected)

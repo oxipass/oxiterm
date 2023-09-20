@@ -41,6 +41,7 @@ func GetMainScreen() *tview.Flex {
 
 	buttonAddItem = tview.NewButton("Add Item (1)").SetSelectedFunc(addButtonPressed)
 	buttonAddField = tview.NewButton("Add Field (2)").SetSelectedFunc(addButtonPressed)
+	buttonExit = tview.NewButton("Add Field (2)").SetSelectedFunc(addButtonPressed)
 
 	mainFlex.AddItem(itemsList, 0, 1, true).
 		AddItem(fieldsList, 0, 2, false)

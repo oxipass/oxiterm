@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/gdamore/tcell/v2 v2.6.0
 	github.com/oxipass/oxicrypt v1.0.11
-	github.com/oxipass/oxilib v1.1.3
+	github.com/oxipass/oxilib v1.1.4
 	github.com/rivo/tview v0.0.0-20230226195229-47e7db7885b4
 )
 

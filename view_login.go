@@ -8,16 +8,17 @@ import (
 var loginForm *tview.Form
 var actualPassword string
 
+// FIXME: Hangs on the login with empty password
+
 func GetLoginScreen() (form *tview.Form) {
 
 	loginForm = tview.NewForm().
 		AddPasswordField("Master Password", "", 16, '*', PasswordChanged).
 		AddButton("Login", func() {
-			if CheckPassword() {
+			if err := CheckPassword(); err == nil {
 				app.SetRoot(GetMainScreen(), true)
 			} else {
-
-				app.SetRoot(GetErrorView("Password is wrong, try again", GetLoginScreen()), true)
+				app.SetRoot(GetErrorView(err.Error(), GetLoginScreen()), true)
 			}
 		}).
 		AddButton("Main Menu", func() {
@@ -30,18 +31,7 @@ func PasswordChanged(password string) {
 	actualPassword = password
 }
 
-func CheckPassword() bool {
+func CheckPassword() error {
 	oxi := oxilib.GetInstance()
-
-	//err := oxi.Open(dbFile)
-	//if err != nil {
-	//	return false
-	//}
-
-	err := oxi.Unlock(actualPassword)
-
-	if err != nil {
-		return false
-	}
-	return true
+	return oxi.Unlock(actualPassword)
 }

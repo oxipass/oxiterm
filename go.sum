@@ -10,8 +10,8 @@ github.com/mattn/go-sqlite3 v1.14.16 h1:yOQRA0RpS5PFz/oikGwBEqvAWhWg5ufRz4ETLjwp
 github.com/mattn/go-sqlite3 v1.14.16/go.mod h1:2eHXhiwb8IkHr+BDWZGa96P6+rkvnG63S2DGjv9HUNg=
 github.com/oxipass/oxicrypt v1.0.11 h1:pSyv06EPDpo7lrTKTVVoIZIhxjC1cxqgqwlmH19uG44=
 github.com/oxipass/oxicrypt v1.0.11/go.mod h1:EIH3qElUAFrBgQ4RA1E33Y4FpQsQzT8dW7y8cQGEvhc=
-github.com/oxipass/oxilib v1.1.3 h1:/wQorc49ytBVEcRkErvSRIBQwQaHKUR1OugEGao9kRc=
-github.com/oxipass/oxilib v1.1.3/go.mod h1:9EiR6hQId8sMjCguZOGZ7aB/wGnc5LBz+OwKQcyS5u4=
+github.com/oxipass/oxilib v1.1.4 h1:ctZDP8eZUN2XRR2iE9v9ckejGxajgpPs8W1VpASJL5U=
+github.com/oxipass/oxilib v1.1.4/go.mod h1:SIIe1CH6cvcJYJNV5H2/J0bCXL10lTQ+tIgac7sDJNw=
 github.com/rivo/tview v0.0.0-20230226195229-47e7db7885b4 h1:tj6c++jeZxE3+Z+8+3/HOY/KpqaVt1tZ8i6sNRmjQ1M=
 github.com/rivo/tview v0.0.0-20230226195229-47e7db7885b4/go.mod h1:nVwGv4MP47T0jvlk7KuTTjjuSmrGO4JF0iaiNt4bufE=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=

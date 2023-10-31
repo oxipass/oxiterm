@@ -4,6 +4,7 @@ import (
 	"github.com/oxipass/oxicrypt"
 	"github.com/oxipass/oxilib"
 	"github.com/rivo/tview"
+	"log"
 )
 
 var registerForm *tview.Form
@@ -21,11 +22,16 @@ func GetRegisterScreen() (form *tview.Form) {
 			if CheckNewPassword() {
 				oxiInstance := oxilib.GetInstance()
 
-				err := oxiInstance.SetNewPassword(newPassword, oxicrypt.AES256Id)
+				err := oxiInstance.SetNewPassword(newPassword, oxicrypt.AES256Text)
 				if err != nil {
 					app.SetRoot(GetRegisterScreen(), true)
 				}
-				app.SetRoot(GetMainScreen(), true)
+				templatesErr := oxiInstance.AddDefaultItemsTemplates()
+				if templatesErr != nil {
+					log.Println(err.Error()) // Error happened but the app can work without templates
+				}
+				NavToMain(cViewDefault)
+
 			} else {
 				// E,pty password fields, set focus to new password
 			}

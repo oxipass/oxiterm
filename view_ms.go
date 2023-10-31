@@ -5,13 +5,12 @@ import (
 	"github.com/rivo/tview"
 )
 
-// TODO: In gui Ctrl+Q is not working as exit, find a way to exit
-// TODO: Implement Lock command
 // TODO: Implement adding new field
 
-func GetMainScreen() *tview.Flex {
+func GetMainScreen(activeView string) *tview.Flex {
 	var err error
 	wrapperFlex = tview.NewFlex().SetDirection(tview.FlexRow)
+	searchFlex := GetSearchFlex()
 	mainFlex := tview.NewFlex()
 	buttonsFlex := GetButtonsFlex()
 
@@ -32,6 +31,8 @@ func GetMainScreen() *tview.Flex {
 		AddItem(fieldsList, 0, 2, false)
 
 	wrapperFlex.AddItem(mainFlex, 0, 1, true).
+		AddItem(searchFlex, 1, 99, false).
+		AddItem(tview.NewBox(), 1, 0, false).
 		AddItem(buttonsFlex, 1, 0, false)
 
 	itemsList.SetInputCapture(processItemsEvents)
@@ -58,29 +59,18 @@ func GetMainScreen() *tview.Flex {
 	wrapperFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyTab:
-			if buttonAddItem.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddField)
-				return nil
-			} else if buttonAddField.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonExit)
+			if NavToNext() {
 				return nil
 			}
 		case tcell.KeyRight:
-			if buttonAddItem.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddField)
-				return nil
-			} else if buttonAddField.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonExit)
+			if NavToNext() {
 				return nil
 			}
 		case tcell.KeyLeft:
-			if buttonAddField.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddItem)
-				return nil
-			} else if buttonExit.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddField)
+			if NavToPrevious() {
 				return nil
 			}
+
 		case tcell.KeyCtrlF:
 			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
 			return nil
@@ -102,22 +92,14 @@ func GetMainScreen() *tview.Flex {
 			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
 			return nil
 		case tcell.KeyCtrlQ:
-			// Exit the application
-			app.Stop()
+			actionStopApp()
 			return nil
 		}
 
 		return event
 	})
+
 	return wrapperFlex
-}
-
-func addButtonPressed() {
-	app.SetRoot(GetAddItemScreen(), true)
-}
-
-func actionExit() {
-	app.Stop()
 }
 
 func ItemSelected() {

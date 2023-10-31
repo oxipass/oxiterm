@@ -26,9 +26,6 @@ func processItemsEvents(event *tcell.EventKey) *tcell.EventKey {
 	case 'F':
 		app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
 		return nil
-	case 'x':
-		app.Stop()
-		return nil
 	}
 	return event
 }

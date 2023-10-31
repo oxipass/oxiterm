@@ -16,7 +16,7 @@ func GetLoginScreen() (form *tview.Form) {
 		AddPasswordField("Master Password", "", 16, '*', PasswordChanged).
 		AddButton("Login", func() {
 			if err := CheckPassword(); err == nil {
-				app.SetRoot(GetMainScreen(), true)
+				NavToMain(cViewDefault)
 			} else {
 				app.SetRoot(GetErrorView(err.Error(), GetLoginScreen()), true)
 			}

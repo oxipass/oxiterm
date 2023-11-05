@@ -19,7 +19,7 @@ var itemTemplate string
 
 func GetAddItemScreen() (form *tview.Form) {
 	var templNames []string
-	templates, err := oxiInstance.GetTemplatesItems()
+	templates, err := oxi.GetTemplatesItems()
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -37,15 +37,15 @@ func GetAddItemScreen() (form *tview.Form) {
 			var newItem models.UpdateItemForm
 			newItem.Name = itemName
 			newItem.Icon = "brands/golang"
-			_, err := oxiInstance.AddNewItem(newItem)
+			_, err := oxi.AddNewItem(newItem)
 			if err != nil {
-				app.SetRoot(GetErrorView("Item adding error: "+err.Error(), addItemForm), true)
+				NavToError("Item adding error: "+err.Error(), cScreenAddItem)
 				return
 			}
 			NavToMain(cViewItems)
 		}).
 		AddButton("Back", func() {
-			NavToMain(cViewAddItem)
+			NavToMain(cScreenMain)
 		})
 	return addItemForm
 }

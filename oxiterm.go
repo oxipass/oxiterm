@@ -11,7 +11,7 @@ import (
 
 var app = tview.NewApplication()
 var dbFile string
-var oxiInstance *oxilib.StorageSingleton
+var oxi *oxilib.StorageSingleton // Oxi Library active instance
 
 // TODO: URGENT! Use oxilib multilingual localization
 
@@ -39,15 +39,15 @@ func main() {
 			return
 		}
 	}
-	oxiInstance = oxilib.GetInstance()
+	oxi = oxilib.GetInstance()
 	log.Println("OxiPass is initiating... ")
-	err = oxiInstance.Open(dbFile)
+	err = oxi.Open(dbFile)
 	if err != nil {
 		log.Fatal("Initiation error: " + err.Error())
 		return
 	}
 
-	isNew := oxiInstance.IsNew()
+	isNew := oxi.IsNew()
 
 	log.Println("App started in interactive mode")
 	if isNew {

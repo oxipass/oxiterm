@@ -7,3 +7,7 @@ func addItemButtonPressed() {
 func addFieldButtonPressed() {
 	app.SetRoot(GetAddFieldScreen(), true)
 }
+
+func aboutButtonPressed() {
+	app.SetRoot(GetAboutView(cScreenMain), true)
+}

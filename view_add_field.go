@@ -14,7 +14,7 @@ var fieldsTemplNames []string
 
 func GetAddFieldScreen() (form *tview.Form) {
 
-	fieldsTemplNamesStr, err := oxiInstance.GetTemplatesItems()
+	fieldsTemplNamesStr, err := oxi.GetTemplatesItems()
 	if err != nil {
 		log.Println(err.Error())
 	}
@@ -31,7 +31,7 @@ func GetAddFieldScreen() (form *tview.Form) {
 			NavToMain(cViewFields)
 		}).
 		AddButton("Back", func() {
-			NavToMain(cViewAddField)
+			NavToMain(cViewFields)
 		})
 	return addFieldForm
 }

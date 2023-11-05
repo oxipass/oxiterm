@@ -1,11 +1,11 @@
 package main
 
 func actionLock() {
-	_ = oxiInstance.Lock()
+	_ = oxi.Lock()
 	NavToLogin()
 }
 
 func actionStopApp() {
-	_ = oxiInstance.Close()
+	_ = oxi.Close()
 	app.Stop()
 }

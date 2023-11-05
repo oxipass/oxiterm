@@ -14,47 +14,29 @@ func GetMainScreen(activeView string) *tview.Flex {
 	mainFlex := tview.NewFlex()
 	buttonsFlex := GetButtonsFlex()
 
+	// Getting items list from the database
 	itemsList, err = GetItemsList()
 	if err != nil {
-		app.SetRoot(GetErrorView("Items reading error: "+err.Error(), addItemForm), true)
+		NavToError("Items reading error: "+err.Error(), cScreenLogin)
 		return nil
 	}
+	itemsList.SetInputCapture(processItemsEvents)
 	itemsList.SetBorder(true).SetTitle(" Items (Ctrl+I) ").SetBorderPadding(1, 1, 1, 1)
 
+	// Getting fields list from the database
 	fieldsList = tview.NewList().ShowSecondaryText(true)
-	fieldsList.AddItem("🗄 User", "alexanrb", 0, FieldSelected)
-	fieldsList.AddItem("🗄 Password", "Bsyu87z1", 0, FieldSelected)
-	fieldsList.AddItem("🗄 PIN", "1799", 0, FieldSelected)
-	fieldsList.SetBorder(true).SetTitle(" Fields (Ctrl+S) ").SetBorderPadding(1, 1, 1, 1)
+	fieldsList.SetInputCapture(processFieldsEvents)
+	fieldsList.SetBorder(true).SetTitle(" Fields (F) ").SetBorderPadding(1, 1, 1, 1)
 
+	// Joining items and fields in one horizontal flex
 	mainFlex.AddItem(itemsList, 0, 1, true).
 		AddItem(fieldsList, 0, 2, false)
 
+	// Top level flex
 	wrapperFlex.AddItem(mainFlex, 0, 1, true).
 		AddItem(searchFlex, 1, 99, false).
 		AddItem(tview.NewBox(), 1, 0, false).
 		AddItem(buttonsFlex, 1, 0, false)
-
-	itemsList.SetInputCapture(processItemsEvents)
-
-	fieldsList.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyLeft:
-			app.SetRoot(wrapperFlex, true).SetFocus(itemsList)
-			return nil
-		case tcell.KeyRight:
-			return nil
-		}
-		switch event.Rune() {
-		case 'I':
-			app.SetRoot(wrapperFlex, true).SetFocus(itemsList)
-			return nil
-		case 'i':
-			app.SetRoot(wrapperFlex, true).SetFocus(itemsList)
-			return nil
-		}
-		return event
-	})
 
 	wrapperFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
@@ -70,26 +52,25 @@ func GetMainScreen(activeView string) *tview.Flex {
 			if NavToPrevious() {
 				return nil
 			}
-
 		case tcell.KeyCtrlF:
-			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
+			mainSetFocus(searchInput)
 			return nil
 		}
 		return event
 	})
 
 	mainFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-
 		switch event.Key() {
 		case tcell.KeyTab:
-			if itemsList.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
-			} else if fieldsList.HasFocus() {
-				app.SetRoot(wrapperFlex, true).SetFocus(buttonAddItem)
-			}
+			NavToNext()
+			//if itemsList.HasFocus() {
+			//	mainSetFocus(fieldsList)
+			//} else if fieldsList.HasFocus() {
+			//	mainSetFocus(buttonLock)
+			//}
 			return nil
 		case tcell.KeyCtrlF:
-			app.SetRoot(wrapperFlex, true).SetFocus(fieldsList)
+			mainSetFocus(searchInput)
 			return nil
 		case tcell.KeyCtrlQ:
 			actionStopApp()

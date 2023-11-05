@@ -5,7 +5,7 @@ import "github.com/rivo/tview"
 func GetItemsList() (*tview.List, error) {
 	itmsList := tview.NewList().ShowSecondaryText(false)
 
-	items, err := oxiInstance.ReadAllItems(false, false)
+	items, err := oxi.ReadAllItems(false, false)
 	if err != nil {
 		return nil, err
 	}

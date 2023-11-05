@@ -14,8 +14,7 @@ func GetMainMenu() (list *tview.List) {
 			NavToLogin()
 		}).
 		AddItem("About", "About this app", 'a', func() {
-			app.SetRoot(GetAboutView(), true)
-
+			NavToAbout(cScreenMenu)
 		}).
 		AddItem("Quit", "Leave the app", 'q', actionStopApp)
 	return mainMenu

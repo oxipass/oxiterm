@@ -7,15 +7,17 @@ import (
 
 var aboutView *tview.Modal
 
-func GetAboutView() (form *tview.Modal) {
+func GetAboutView(returnScreen string) (form *tview.Modal) {
 	if aboutView != nil {
 		return aboutView
 	}
-	aboutView = tview.NewModal().SetText(cAppName + "\n" + "Version 1.0").
+	aboutView = tview.NewModal().SetText(cAppName + "\n" +
+		oxi.T("version") + cVersion + "\n" +
+		cHomepage).
 		AddButtons([]string{"OK"}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
-				app.SetRoot(GetMainMenu(), true)
+				NavToScreen(returnScreen)
 			}
 		})
 
@@ -23,7 +25,10 @@ func GetAboutView() (form *tview.Modal) {
 		switch event.Key() {
 		case tcell.KeyCtrlQ:
 			// Exit the application
-			app.Stop()
+			actionStopApp()
+			return nil
+		case tcell.KeyEscape:
+			NavToScreen(returnScreen)
 			return nil
 		}
 		return event

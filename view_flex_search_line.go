@@ -5,8 +5,6 @@ import (
 	"github.com/rivo/tview"
 )
 
-// TODO: Add buttons: About (0), Settings (S)
-
 func GetSearchFlex() *tview.Flex {
 	var tags []string
 	tags = append(tags, "------------")
@@ -34,23 +32,4 @@ func tagSelected(option string, ind int) {
 
 func startSearch(key tcell.Key) {
 
-}
-
-func GetButtonsFlex() *tview.Flex {
-	buttonsFlex := tview.NewFlex()
-
-	buttonAddItem = tview.NewButton("Add Item (1)").SetSelectedFunc(addItemButtonPressed)
-	buttonAddField = tview.NewButton("Add Field (2)").SetSelectedFunc(addFieldButtonPressed)
-	buttonLock = tview.NewButton("Lock (L)").SetSelectedFunc(actionLock)
-	buttonQuit = tview.NewButton("Quit (Ctrl+Q)").SetSelectedFunc(actionStopApp)
-
-	buttonsFlex.AddItem(buttonAddItem, 15, 0, false).
-		AddItem(tview.NewBox(), 1, 0, false).
-		AddItem(buttonAddField, 15, 0, false).
-		AddItem(tview.NewBox(), 1, 0, false).
-		AddItem(buttonLock, 15, 0, false).
-		AddItem(tview.NewBox(), 1, 0, false).
-		AddItem(buttonQuit, 15, 0, false)
-
-	return buttonsFlex
 }

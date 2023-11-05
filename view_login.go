@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gdamore/tcell/v2"
 	"github.com/oxipass/oxilib"
 	"github.com/rivo/tview"
 )
@@ -15,18 +16,34 @@ func GetLoginScreen() (form *tview.Form) {
 	loginForm = tview.NewForm().
 		AddPasswordField("Master Password", "", 16, '*', PasswordChanged).
 		AddButton("Login", func() {
-			if err := CheckPassword(); err == nil {
-				NavToMain(cViewDefault)
-			} else {
-				app.SetRoot(GetErrorView(err.Error(), GetLoginScreen()), true)
-			}
+			processCheckPassword()
 		}).
 		AddButton("Main Menu", func() {
-			app.SetRoot(GetMainMenu(), true)
+			NavToMenu()
+		}).
+		AddButton("Quit (Ctrl+Q)", func() {
+			actionStopApp()
 		})
+	loginForm.SetInputCapture(processLoginEvents)
 	return loginForm
 }
 
+func processCheckPassword() {
+	if err := CheckPassword(); err == nil {
+		NavToMain(cViewDefault)
+	} else {
+		NavToError(err.Error(), cScreenLogin)
+	}
+}
+
+func processLoginEvents(event *tcell.EventKey) *tcell.EventKey {
+	switch event.Key() {
+	case tcell.KeyCtrlQ:
+		actionStopApp()
+		return nil
+	}
+	return event
+}
 func PasswordChanged(password string) {
 	actualPassword = password
 }

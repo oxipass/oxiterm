@@ -42,9 +42,14 @@ func GetMainScreen(activeView string) *tview.Flex {
 		AddItem(buttonsFlex, 1, 0, false)
 
 	wrapperFlex.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+
 		switch event.Key() {
 		case tcell.KeyTab:
 			if NavToNext() {
+				return nil
+			}
+		case tcell.KeyBacktab:
+			if NavToPrevious() {
 				return nil
 			}
 		case tcell.KeyRight:
@@ -57,6 +62,12 @@ func GetMainScreen(activeView string) *tview.Flex {
 			}
 		case tcell.KeyCtrlF:
 			mainSetFocus(searchInput)
+			return nil
+		case tcell.KeyCtrlT:
+			mainSetFocus(tagsFilter)
+			return nil
+		case tcell.KeyCtrlQ:
+			actionStopApp()
 			return nil
 		}
 		return event

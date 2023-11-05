@@ -27,6 +27,14 @@ func NavToLogin() {
 	app.SetRoot(GetLoginScreen(), true)
 }
 
+func NavToAddField() {
+	app.SetRoot(GetAddFieldScreen(), true)
+}
+
+func NavToAddItem() {
+	app.SetRoot(GetAddItemScreen(), true)
+}
+
 func NavToError(errorMessage string, returnScreen string) {
 	app.SetRoot(GetErrorView(errorMessage, returnScreen), true)
 }

@@ -10,10 +10,15 @@ var actualPassword string
 
 // FIXME: Hangs on the login with empty password
 
-func GetLoginScreen() (form *tview.Form) {
+func GetLoginScreen() *tview.Flex {
+	loginVerticalFlex := tview.NewFlex().SetDirection(tview.FlexRow)
+	loginHorizontalFlex := tview.NewFlex().SetDirection(tview.FlexColumn)
 
+	masterPasswordLabel := "Master Password"
+	mpLabelLength := len(masterPasswordLabel)
 	loginForm = tview.NewForm().
-		AddPasswordField("Master Password", "", 16, '*', PasswordChanged).
+		AddTextView("", cAppName+" "+cVersion, 56, 1, true, false).
+		AddPasswordField(masterPasswordLabel, "", 58-mpLabelLength, '*', PasswordChanged).
 		AddButton("Login", func() {
 			processCheckPassword()
 		}).
@@ -24,7 +29,14 @@ func GetLoginScreen() (form *tview.Form) {
 			actionStopApp()
 		})
 	loginForm.SetInputCapture(processLoginEvents)
-	return loginForm
+	loginForm.SetBorder(true)
+	loginHorizontalFlex.AddItem(tview.NewBox(), 0, 50, false).
+		AddItem(loginForm, 60, 0, true).
+		AddItem(tview.NewBox(), 0, 50, false)
+	loginVerticalFlex.AddItem(tview.NewBox(), 0, 50, false).
+		AddItem(loginHorizontalFlex, 9, 0, true).
+		AddItem(tview.NewBox(), 0, 50, false)
+	return loginVerticalFlex
 }
 
 func processCheckPassword() {

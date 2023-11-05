@@ -1,13 +1,13 @@
 package main
 
 func addItemButtonPressed() {
-	app.SetRoot(GetAddItemScreen(), true)
+	NavToAddItem()
 }
 
 func addFieldButtonPressed() {
-	app.SetRoot(GetAddFieldScreen(), true)
+	NavToAddField()
 }
 
 func aboutButtonPressed() {
-	app.SetRoot(GetAboutView(cScreenMain), true)
+	NavToAbout(cScreenMain)
 }

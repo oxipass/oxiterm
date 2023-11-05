@@ -1,7 +1,5 @@
 package main
 
-// TODO: finalize main screen navigation
-
 func NavToScreen(screenName string) {
 	switch screenName {
 	case cScreenMain:

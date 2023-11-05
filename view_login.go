@@ -17,7 +17,7 @@ func GetLoginScreen() *tview.Flex {
 	masterPasswordLabel := "Master Password"
 	mpLabelLength := len(masterPasswordLabel)
 	loginForm = tview.NewForm().
-		AddTextView("", cAppName+" "+cVersion, 56, 1, true, false).
+		//AddTextView("", cAppName+" "+cVersion, 56, 1, true, false).
 		AddPasswordField(masterPasswordLabel, "", 58-mpLabelLength, '*', PasswordChanged).
 		AddButton("Login", func() {
 			processCheckPassword()
@@ -30,12 +30,16 @@ func GetLoginScreen() *tview.Flex {
 		})
 	loginForm.SetInputCapture(processLoginEvents)
 	loginForm.SetBorder(true)
+	loginForm.SetTitle(" " + cAppName + " " + cVersion + " ")
+	footer := tview.NewTextView().SetText("Copyleft (c) OxiSoft 2022-2023").
+		SetTextAlign(1)
 	loginHorizontalFlex.AddItem(tview.NewBox(), 0, 50, false).
 		AddItem(loginForm, 60, 0, true).
 		AddItem(tview.NewBox(), 0, 50, false)
 	loginVerticalFlex.AddItem(tview.NewBox(), 0, 50, false).
-		AddItem(loginHorizontalFlex, 9, 0, true).
-		AddItem(tview.NewBox(), 0, 50, false)
+		AddItem(loginHorizontalFlex, 8, 0, true).
+		AddItem(tview.NewBox(), 0, 50, false).
+		AddItem(footer, 0, 50, false)
 	return loginVerticalFlex
 }
 

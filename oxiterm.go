@@ -41,6 +41,7 @@ func main() {
 	}
 	oxi = oxilib.GetInstance()
 	log.Println("OxiPass is initiating... ")
+	log.Println("Path to database: " + dbFile)
 	err = oxi.Open(dbFile)
 	if err != nil {
 		log.Fatal("Initiation error: " + err.Error())
@@ -52,8 +53,9 @@ func main() {
 	log.Println("App started in interactive mode")
 	if isNew {
 		log.Println("OxiPass first time start, performing secure database initialization")
-		app.SetRoot(GetRegisterScreen(), true)
+		NavToRegistration()
 	} else {
+		log.Println("Database processed and checked, proceeding to the interactive login screen")
 		NavToLogin()
 	}
 	app.EnableMouse(true)

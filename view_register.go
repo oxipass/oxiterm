@@ -1,10 +1,7 @@
 package main
 
 import (
-	"github.com/oxipass/oxicrypt"
-	"github.com/oxipass/oxilib"
 	"github.com/rivo/tview"
-	"log"
 )
 
 var registerForm *tview.Form
@@ -12,32 +9,25 @@ var newPassword string
 var confirmPassword string
 
 func GetRegisterScreen() (form *tview.Form) {
-	if registerForm != nil {
-		return registerForm
-	}
+	//if registerForm != nil {
+	//	return registerForm
+	//}
 	registerForm = tview.NewForm().
 		AddPasswordField("New Password", "", 16, '*', NewPasswordChanged).
 		AddPasswordField("Confirm Password", "", 16, '*', ConfirmPasswordChanged).
 		AddButton("Create storage", func() {
 			if CheckNewPassword() {
-				oxiInstance := oxilib.GetInstance()
-
-				err := oxiInstance.SetNewPassword(newPassword, oxicrypt.AES256Text)
+				err := SetNewPassword(newPassword)
 				if err != nil {
-					app.SetRoot(GetRegisterScreen(), true)
+					NavToError(err.Error(), cScreenRegistration)
+				} else {
+					NavToMain(cViewDefault)
 				}
-				templatesErr := oxiInstance.AddDefaultItemsTemplates()
-				if templatesErr != nil {
-					log.Println(err.Error()) // Error happened but the app can work without templates
-				}
-				NavToMain(cViewDefault)
 
-			} else {
-				// E,pty password fields, set focus to new password
 			}
 		}).
-		AddButton("Exit", func() {
-			app.Stop()
+		AddButton("Quit (Ctrl+Q)", func() {
+			actionStopApp()
 		})
 	return registerForm
 }
@@ -52,10 +42,11 @@ func ConfirmPasswordChanged(password string) {
 
 func CheckNewPassword() bool {
 	if newPassword == "" {
-		// show error, empty password
+		NavToError("Password cannot be empty", cScreenRegistration)
 		return false
 	}
 	if newPassword != confirmPassword {
+		NavToError("Password confirmation failed, try again", cScreenRegistration)
 		// show error, passwords are different
 		return false
 	}

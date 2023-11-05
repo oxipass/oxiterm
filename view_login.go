@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gdamore/tcell/v2"
-	"github.com/oxipass/oxilib"
 	"github.com/rivo/tview"
 )
 
@@ -46,9 +45,4 @@ func processLoginEvents(event *tcell.EventKey) *tcell.EventKey {
 }
 func PasswordChanged(password string) {
 	actualPassword = password
-}
-
-func CheckPassword() error {
-	oxi := oxilib.GetInstance()
-	return oxi.Unlock(actualPassword)
 }

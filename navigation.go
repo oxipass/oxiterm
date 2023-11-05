@@ -8,9 +8,15 @@ func NavToScreen(screenName string) {
 		NavToMain(cViewItems)
 	case cScreenMenu:
 		NavToMenu()
+	case cScreenRegistration:
+		NavToRegistration()
 	case cScreenLogin:
 		NavToLogin()
 	}
+}
+
+func NavToRegistration() {
+	app.SetRoot(GetRegisterScreen(), true)
 }
 
 func NavToMain(activeView string) {

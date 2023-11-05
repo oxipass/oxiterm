@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/oxipass/oxilib/models"
 	"github.com/rivo/tview"
-	"log"
 )
 
 // TODO: Implement coming back by pressing Esc
@@ -18,19 +17,11 @@ var itemIcon string
 var itemTemplate string
 
 func GetAddItemScreen() (form *tview.Form) {
-	var templNames []string
-	templates, err := oxi.GetTemplatesItems()
-	if err != nil {
-		log.Println(err.Error())
-	}
-	for _, templItem := range templates {
-		templNames = append(templNames, templItem.Name)
-	}
-	templNames = append(templNames, "Empty (without template)")
+	templatesName := GetItemsTemplates()
 	addItemForm = tview.NewForm().
 		AddInputField("Item name", "", 16, nil, ItemNameChangedChanged).
 		AddInputField("Item icon", "", 16, nil, ItemIconChangedChanged).
-		AddDropDown("Item template", templNames, 0, func(option string, ind int) {
+		AddDropDown("Item template", templatesName, 0, func(option string, ind int) {
 
 		}).
 		AddButton("Save Item", func() {
@@ -42,6 +33,7 @@ func GetAddItemScreen() (form *tview.Form) {
 				NavToError("Item adding error: "+err.Error(), cScreenAddItem)
 				return
 			}
+			wrapperFlex = nil // Forcing screen reload
 			NavToMain(cViewItems)
 		}).
 		AddButton("Back", func() {

@@ -8,6 +8,9 @@ import (
 // TODO: Implement adding new field
 
 func GetMainScreen(activeView string) *tview.Flex {
+	if wrapperFlex != nil {
+		return wrapperFlex
+	}
 	var err error
 	wrapperFlex = tview.NewFlex().SetDirection(tview.FlexRow)
 	searchFlex := GetSearchFlex()

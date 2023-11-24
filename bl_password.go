@@ -24,5 +24,10 @@ func SetNewPassword(newPassword string) error {
 	if templatesErr != nil {
 		log.Println(templatesErr.Error()) // Error happened but the app can work without templates
 	}
+
+	tagsTemplatesErr := oxiInstance.AddDefaultTags()
+	if tagsTemplatesErr != nil {
+		log.Println(tagsTemplatesErr.Error()) // Error happened but the app can work without templates
+	}
 	return nil
 }

@@ -6,12 +6,8 @@ import (
 )
 
 func GetSearchFlex() *tview.Flex {
-	var tags []string
-	tags = append(tags, "------------")
-	tags = append(tags, "Internet")
-	tags = append(tags, "Banking")
-	tags = append(tags, "Crypto")
-	tags = append(tags, "Phones")
+	tags := GetTags()
+	tags = append([]string{"------"}, tags...)
 	searchFlex := tview.NewFlex()
 	searchInput = tview.NewInputField().SetLabel("Find (Ctrl+F): ").SetDoneFunc(startSearch)
 	tagsFilter = tview.NewDropDown()
